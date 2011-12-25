@@ -1,0 +1,11 @@
+
+Links:
+http://www.yellowicon.com/
+http://www.thefreesite.com/Free_Graphics/
+http://www.vistaicons.com/icon_collections.htm
+http://www.iconarchive.com/
+http://iconbase.com/
+xhtml image way:
+<a href="http://borg-collective.eu"><img src="/images/buttons/Search.png" width="150" height="52" alt="show" longdesc="Show more text" /></a>
+rails creation
+<a href="/category/search"><img src="/images/buttons/Search.png" width="150" height="52" alt="Category Search"></a>

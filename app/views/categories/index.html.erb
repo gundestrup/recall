@@ -1,0 +1,27 @@
+<h1>Search categories</h1>
+
+<% form_tag({:controller => controller.controller_name, :action => controller.action_name}, :method => 'get') do %>
+    <p>
+        <%= text_field_tag :search, params[:search] %>
+        <%= submit_tag "Search", :name => nil %> | <%= link_to "Search cards", :controller => "search", :action => "index" %>
+    </p>
+
+<% end %>
+<% if logged_in? && current_user.admin? %>
+<%= link_to '<img src="/images/icons/edit_add.png" width="35" height="35" class="img" />', :action => 'new' %>
+<% end %>
+         <%= will_paginate @categories %>
+    <table>
+        <tr>
+            <th>Category</th><td> (piles | cards)</td>
+        </tr>
+        <% @categories.each do |category| %>
+            <tr>
+                <td><%= link_to category.name, :action => 'show', :id => category.id %></td><td> (<%= Pile.count(:all, :conditions => ["category_id = ?", category.id] ) %> | <%= Card.count(:all, :include => :pile, :conditions => ["category_id = ?", category.id]  ) %>)</td>
+                <% if logged_in? && current_user.admin? %>
+                  <td><%= link_to '<img src="/images/icons/edit.png" width="25" height="25" alt="Edit" class="img" />', :action => 'edit', :id => category.id %></td>
+                  <td><%= link_to '<img src="/images/icons/editdelete.png" width="25" height="25" alt="Destroy" class="img" />', { :action => 'destroy', :id => category.id }, :confirm => 'Are you sure?', :method => :post %></td>
+                <% end %>
+            </tr>            
+        <% end %>
+    </table>

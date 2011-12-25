@@ -1,0 +1,57 @@
+<script type="text/javascript">
+                document.observe('keydown', function(k) {
+                        if (k.keyCode != 37) return;
+                        //pressing left
+                        <% if params[:page] == nil or params[:page].to_i == 1 %>
+                        window.location='/piles/show/<%=@pile.id %>.mobile';
+                        <% else %>
+                        window.location='/piles/learn/<%=@pile.id %>.mobile\?page=<%=params[:page].to_i-1 %>';
+                        <% end %>
+                });
+                document.observe('keydown', function(k) {
+                        if (k.keyCode != 39) return;
+                        //pressing right
+                        <% if params[:page] == nil %>
+                        window.location='/piles/learn/<%=@pile.id %>.mobile\?page=2';
+                        <% else %>
+                        window.location='/piles/learn/<%=@pile.id %>.mobile\?page=<%=params[:page].to_i+1 %>';
+                        <% end %>
+                });
+                document.observe('keydown', function(k) {
+                        if (k.keyCode != 38) return;
+                        //pressing up
+                        window.location='/categories/show/<%=@pile.category.id %>.mobile'
+                });
+                document.observe('keydown', function(k) {
+                        if (k.keyCode != 40) return;
+                        //pressing down
+                        <% for card in @cards %>
+                        Effect.Fade(document.getElementById('Question<%= card.id %>'),{duration:0.15});Effect.Appear(document.getElementById('Card<%=  card.id %>'),{delay: 0.2});
+                        <% end %>
+                });
+
+        </script>
+<%= link_to 'Back', :controller => 'categories', :action => 'show', :id => @pile.category.id, :format => 'mobile' %>&nbsp;|&nbsp;<%= @pile.name %>
+<table width="240" border="0" cellspacing="2">
+<% for card in @cards %>
+  <tr>
+    <td height="15" colspan="4"  class="learnhead"><%= %Q{#{card.head}} %></td>
+  </tr>
+  <tr>    
+    <td class="previous"><%= link_to 'previous', :action => 'learn', :id => @pile.id, :format => 'mobile', :page => @cards.previous_page %><td>
+    <td class="questionnumber"><%= @cards.current_page %>/<%= @cards.total_pages %> </td>
+    <td class="next"><%= link_to 'next', :action => 'learn', :id => @pile.id, :format => 'mobile', :page => @cards.next_page %></td>
+  </tr>
+  <tr>    
+    <td height="200px" colspan= "4" class="learnanwser"  onclick="new Effect.Fade(document.getElementById('Question<%= card.id %>'),{duration:0.15});Effect.Appear(document.getElementById('Card<%=  card.id %>'),{delay: 0.2})"><div id="Question<%= card.id %>"><%= card.front %> ? </div>
+	  <div id="Card<%= card.id %>" style="float: none; display: none; ">
+          <div><%= %Q{#{card.back}} %></div>
+          </div>
+    </td>
+  </tr>  
+  <tr>
+    <td class="text">&nbsp;&nbsp;&nbsp;</td>
+    <td colspan="2" class="text" >Author: <%= %Q{#{card.user.name}}  %></td>
+  </tr>  
+  <% end %>
+</table>

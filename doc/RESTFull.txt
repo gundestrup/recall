@@ -1,0 +1,70 @@
+SCREENCAST
+http://podcast.sdruby.com/podcasts/009_rest.m4v
+http://podcast.sdruby.com/podcasts/010_rest_2.m4v
+
+REST 407-421
+Routing 392-403
+(Objekt orienteret)
+
+/controller/action/create
+/controller/action/show/1
+/controller/action/update/1
+/controller/action/delete/1
+
+POST -> Create
+GET -> Read
+Put -> Update
+Delete -> Destroy
+
+POST /controller/ (create)
+GET /controller/1 (read)
+PUT /controller/1 (update)
+DELETE /controller/1 (delete)
+
+map.recources :citizen
+giver:
+	citizen_url /citizens/:id
+	citizens_url /citizens
+	new_citizen_url /citizens/new
+	edit_citizen_url /citizens/:id;edit
+
+Namedroutes for free
+
+OLD:
+link_to :controller => 'assertions',
+				:action => 'destroy', :post => :true
+
+NEW:
+link_to assertions_url(@assersion),
+				:methode => :delete
+				
+Mulighed for nestes resources, if related
+fx: /posts/1/comments
+(blog) med post/1 (comment controller)
+
+map.resources :posts do |post|
+		post.resources :comments
+		end
+<%= link_to comment_url(@post, @comment) %>
+
+Accept-Header
+respond_to do |t|
+		t.html
+		t.rb {send data ...}
+	end
+	
+Custus mime type?
+Mime::Type.register("text/x-ruby", :rb)
+
+-> Webservices for free
+
+Form, new:
+<% form_for	:assertion,
+			:html => {:methode => :post}
+			:url => accertion_path(@assertion) do |f| %>
+			
+Form, update
+<% form_for	:assertion,
+			:html => {:methode => :put}
+			:url => accertion_path(@assertion) do |f| %>			
+												

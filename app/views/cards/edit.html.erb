@@ -1,0 +1,8 @@
+<h1>Editing card</h1>
+
+<% form_tag :action => 'update', :id => @card do %>
+  <%= render :partial => 'form' %>
+  <%= link_to '<img src="/images/icons/back.png" width="35" height="35" alt="Back" class="img" />', :controller => "piles", :action => 'show', :id => @pile.id %> | <%= submit_tag 'Save' %>
+<% end %>
+<br />
+

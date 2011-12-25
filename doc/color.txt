@@ -1,0 +1,9 @@
+light background: #99cc00
+bark backround: #339900
+white: #FFFFFF
+
+dark yellow color: #ffcc33
+
+light yellow color: #ffffcc
+
+light grey: background-color: #F8F8FF

@@ -1,0 +1,30 @@
+<span id="cards">
+<% if @pile.cards.empty? %>
+<- Please add some cards
+<% end %>
+<% if !@pile.cards.empty?%>
+  Cards (<%= Card.count(:all, :conditions => ["pile_id = ?", @pile.id]) %>)| Reads: <%= @pile.popularity  %>
+    <ul id="cardlist">
+      <% for card in @pile.cards %>
+        <% content_tag_for :li, card do %>
+          <% if logged_in? %>
+            <% if allowed(@pile) %>
+              <span class="handle">[drag]</span>
+            <% end %>
+          <% end %>
+          <%= link_to card.head, :controller =>'cards', :action => 'show', :id => card %>
+          <% if logged_in? %>
+            <% if allowed(@pile) %>
+              <span class="action">
+                <%= link_to 'edit', :controller =>'cards', :action => 'edit', :id => card %> |
+                <%= link_to 'delete', { :controller =>'cards', :action => 'destroy', :id => card }, :confirm => 'Are you sure?', :method => :post %>
+              </span>
+            <% end %>
+           <% end %>
+        <% end %>
+      <% end %>
+    </ul>
+
+  <% end %>
+      <%= sortable_element("cardlist", :url => {:action => "sort"}, :handle => "handle") %>
+</span>

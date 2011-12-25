@@ -1,0 +1,21 @@
+<%= error_messages_for 'piles' %>
+
+<!--[form:pile]-->
+<p><label for="pile_name">Name</label><br/>
+<%= text_field 'piles', 'name'  %></p>
+
+<!--<p><label for="pile_user_id">Author</label><br/>-->
+<!--<%= select("piles", "user_id", User.find(:all).collect {|c| [c.name, c.id] }) %></p>-->
+
+<p><label for="pile_user_id">Author</label><br/>
+<%= current_user.name %></p>
+
+<p><label for="pile_category_id">Category</label><br/>
+<% if controller.action_name != "edit" %>
+<%= session[:cat].name %>
+<% end %>
+<% if controller.action_name == "edit" %>
+<%= select("piles", "category_id", Category.find(:all).collect {|c| [c.name, c.id] }) %>
+<% end %>
+</p>
+<!--[eoform:pile]-->

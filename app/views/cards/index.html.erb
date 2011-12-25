@@ -1,0 +1,37 @@
+<h1>Listing cards</h1>
+<% form_tag({:controller => controller.controller_name, :action => controller.action_name}, :method => 'get') do %>
+    <p>
+        <%= text_field_tag :search, params[:search] %>
+        <%= submit_tag "Search", :name => nil %>
+    </p>
+
+<% end %>
+<table>
+  <tr>
+      <th>Head</th>
+      <th>&nbsp;</th>	
+      <% if logged_in? && current_user.admin? %>
+         <th>&nbsp;</th>
+         <th>&nbsp;</th>
+	     <th>Author</th>
+      <% end %>
+      <th>Pile</th>
+  </tr>
+  
+<% for card in @cards %>
+  <tr>
+    <td><%= link_to card.head, :action => 'show', :id => card %></td>
+	<td><%= card.created_at %></td>
+        <% if logged_in? && current_user.admin? %>
+            <td><%= link_to '<img src="/images/icons/edit.png" width="25" height="25" alt="Edit" class="img" />', :action => 'edit', :id => card %></td>
+            <td><%= link_to '<img src="/images/icons/editdelete.png" width="25" height="25" alt="Destroy" class="img" />', :action => 'destroy', :id => card  %></td>
+            <td><%= link_to card.user.login, :controller => "admin", :action => "user", :id => card.user_id %></td>
+        <% end %>
+	<td><%= link_to card.pile.name, :controller => "piles", :action => "show", :id => card.pile_id %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @cards %>
+
+<br />

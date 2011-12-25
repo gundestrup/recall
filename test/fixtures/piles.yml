@@ -1,0 +1,21 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+one:
+  id: 1
+  name: "piles 1, categories 1"
+  user_id: 1
+  category_id: 1
+  popularity: 0
+
+two:
+  id: 2
+  name: "piles 2, categories 1"
+  user_id: 1
+  category_id: 1
+  popularity: 0
+
+three:
+  id: 3
+  name: "piles 3, categories 2"
+  user_id: 1
+  category_id: 2
+  popularity: 0

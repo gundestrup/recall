@@ -1,0 +1,17 @@
+<h1>Listing Accounts</h1>
+
+<table>
+  <tr>
+      <th>Login</th>
+      <th>Name</th>
+      <th>e-mail</th>
+  </tr>
+<% for user in @users %>
+  <tr>
+	<td><%= link_to user.login, :controller =>'admin', :action => 'user', :id => user.id %></td>
+	<td><%= user.name %></td>
+	<td><%= user.email %></td>
+  </tr>
+<% end %>  
+
+</table>

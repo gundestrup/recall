@@ -1,0 +1,8 @@
+<hr/>
+<div class="list">
+<ul title="Category" selected="true">
+  <% for category in @categories %>
+    <li><%= link_to category.name+' ('+category.piles.count.to_s+')', :action => 'show', :id => category.id, :format => 'mobile' %> </li>
+  <% end %>
+</ul>
+</div>

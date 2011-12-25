@@ -1,0 +1,7 @@
+<h1>Editing pile</h1>
+
+<% form_tag :action => 'update', :id => @pile do %>
+  <%= render :partial => 'form' %>
+  <%= link_to '<img src="/images/icons/back.png" width="35" height="35" alt="Back" class="img" />', :action => 'show', :id => @pile %> | <%= submit_tag 'Edit' %>
+<% end %>
+

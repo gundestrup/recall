@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+one:
+  id: 1
+  name: "categories 1"
+  #categories_types_id: 0
+two:
+  id: 2
+  name: "categories 2"
+  #categories_types_id: 0

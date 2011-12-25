@@ -1,0 +1,21 @@
+Welcome back Master, <%= current_user.send("name") %>, my precious<br />
+<br />
+You now have full access to the hole system, enjoy :-)<br />
+<br />
+<table width="650" cellspacing="5">
+	<tr><td><big><b>Tools and overview</b></big></td></tr>
+	<tr>
+		<td width="50%" >
+		<b><%= link_to 'Account', :controller => "admin", :action => 'list' %>(<%= @total_users %>)</b><br />
+		<b><%= link_to 'Category Type', :controller => "categories_type", :action => 'index' %></b><br />
+		<b><%= link_to 'Category', :controller => "categories", :action => 'index' %>(<%= @total_categories %>)</b><br />
+		<b><%= link_to 'Pile', :controller => "piles", :action => 'index' %> (<%= @total_piles %>)</b><br />
+		<b><%= link_to 'Card', :controller => "cards", :action => 'index' %> (<%= @total_cards %>)</b><br />
+	</td>
+	<td width="50%" >
+		&nbsp;
+	</td>
+	</tr>
+	
+
+</table>

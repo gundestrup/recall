@@ -1,0 +1,8 @@
+<h1>New category</h1>
+
+<% form_tag :action => 'create' do %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag "Create" %>
+<% end %>
+
+<%= link_to '<img src="/images/icons/back.png" width="35" height="35" alt="Back" class="img" />', :action => 'list' %>

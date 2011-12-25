@@ -1,0 +1,50 @@
+<h1><%=t :Welcome_to_ReCALL %></h1>
+<p>Use the menu to signup, and then navigate,<br/>
+    via search -> List to find piles in a category</p>
+<p>To find card to learn click here</p>
+<%= link_to '<img src="/images/buttons/Search.png" width="100" height="36" alt="Search" />',:controller => 'search' %><br />
+<p class="boxsmall">
+<b><big><font color = "red" >
+    Please note, ReCALL is in beta mode.<br />
+    Beta means, work in progress.<br/>
+    If you find a problem/error,<br/>
+    so please contact the webmaster via mail<br />
+ <a href="mailto:webmaster (AT) mednote (DOT) dk"><img
+        src="/images/webmasterATmednoteDK_r.png" alt="Webmaster e-mail" height="21" width="220" /></a>
+</font></big></b><br/>
+    </p>
+<table class="box" align="right">
+    <tr>
+        <td>
+            <b>Most popular piles</b>
+        </td>
+    </tr>
+    <% for pile in @popular_pile %>
+        <tr>
+            <td>
+                <%= link_to pile.name, :controller => "piles", :action => 'show', :id => pile.id %>(<%= pile.popularity %>)
+                <br/>
+                <small>(<%=  pile.category.name %>)</small>
+            </td>
+        </tr>
+
+
+
+    <% end %>
+</table>
+<table border="0" class="box">
+    <tr>
+        <td>
+            <b>Newest Piles</b>
+        </td>
+    </tr>
+<% for pile in @latest_pile %>
+<tr>
+    <td>
+        <%= link_to pile.name, :controller => "piles", :action => 'show', :id => pile %>(<%= Card.count(:all, :conditions => ["pile_id = ?", pile.id]) %>)
+        <br/>
+        <small>(<%=  pile.category.name %>)</small>
+    </td>
+</tr>
+<% end %>
+</table>

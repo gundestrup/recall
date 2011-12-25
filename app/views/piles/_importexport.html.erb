@@ -1,0 +1,31 @@
+<%= show_box_for @pile, :link_name=> "Import CVS" -%>
+
+    <% detail_box_for @pile do %>
+    <%= hide_box_for @pile, :link_name=> "close" %>
+        <% form_for :dump, :url=>{:controller=>"piles", :action=>"csv_import", :id => @pile.id}, :html => { :multipart => true } do |f| -%>
+             <table>
+               <tr>
+                 <td>
+                    Select a CSV File :
+                 </td>
+                   </tr>
+                 <tr>
+                 <td >
+                   <%= f.file_field :file, :size => 10 -%>
+                 </td>
+               </tr>
+               <tr>
+                 <td colspan="2">
+                   <%= submit_tag "Import file" -%>
+                 </td>
+               </tr>
+             </table>
+            <% end -%>
+            <hr>
+            <% form_tag({ :action =>  :csv_export, :id => @pile.id })do -%>
+
+            <%= submit_tag "Export Pile To CSV" %><br/>
+            <%= link_to 'what is CSV?', :controller => "accounts", :action => "help" %>
+    <% end %>
+
+  <% end -%>

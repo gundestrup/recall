@@ -1,0 +1,33 @@
+<h1>Listing piles</h1>
+<% form_tag({:controller => controller.controller_name, :action => controller.action_name}, :method => 'get') do %>
+    <p>
+        <%= text_field_tag :search, params[:search] %>
+        <%= submit_tag "Search", :name => nil %>
+    </p>
+
+<% end %>
+<%= link_to '<img src="/images/icons/edit_add.png" width="35" height="35" class="img" />', :action => 'new_pile' %>
+<table>
+	<tr>
+		<td>Name</td>
+      <% if logged_in? && current_user.admin? %>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          <% end %>
+		<td>Created on</td>
+	</tr>
+
+<% for pile in @piles %>
+  <tr>
+		<td><%= link_to pile.name, :action => 'show', :id => pile %></td>
+        <% if logged_in? && current_user.admin? %>
+            <td><%= link_to '<img src="/images/icons/edit.png" width="25" height="25" alt="Edit" class="img" />', :action => 'edit', :id => pile %></td>
+            <td><%= link_to '<img src="/images/icons/editdelete.png" width="25" height="25" alt="Destroy" class="img" />', { :action => 'destroy', :id => pile }, :confirm => 'Are you sure?', :method => :post %></td>
+        <% end %>
+		<td><%= pile.created_at %></td>
+	</tr>
+<% end %>
+</table>
+
+<%= will_paginate @piles %>
+<br />

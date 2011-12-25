@@ -1,0 +1,32 @@
+<%= error_messages_for 'cards' %>
+
+<!--[form:card]-->
+<%= show_box_for @pile.id, :link_name=> "Add Seperat heading" %>
+<% detail_box_for @pile.id do %>
+    <%= hide_box_for @pile.id, :link_name=> "close" %>
+    <p><label for="card_head">Head</label><br/>
+	<%= text_field 'cards', 'head'  %></p>
+<% end %>
+<p><label for="card_front">Front</label><br/>
+<%= text_area 'cards', 'front'  %></p>
+
+<p><label for="card_back">Back</label><br/>
+<%= text_area 'cards', 'back'  %></p>
+
+<p><label for="card_user_name">Author</label><br/>
+<%= current_user.name %></p>
+
+<p><label for="card_pile">Pile</label><br/>
+<%= @pile.name %>
+<br/>
+    <%= show_box_for @pile, :link_name=> "Add Note" %>
+                <% detail_box_for @pile do %>
+                    <%= hide_box_for @pile, :link_name=> "close" %>
+                    <p><label for="card_note">Note</label><br/>
+                    <%= text_area 'cards', 'note'  %></p>
+
+        <% end %>
+<br/>
+
+<!--[eoform:card]-->
+

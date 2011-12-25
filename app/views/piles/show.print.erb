@@ -1,0 +1,15 @@
+<%= link_to_function("Print this Page", "javascript:print()") %>
+<br/>
+<span style="page-break-before: auto;">
+<% @pile.cards.each do |card| %>
+  <table style="page-break-before: auto;">
+    <th colspan="3"><%= "#{@pile.category.name}" + ': ' + "#{@pile.name}" %></th>
+    <tr><td colspan="3"><%= "#{card.head}" %></td></tr>
+    <tr>
+      <td width="325" height="200"class="learn" ><%= %Q{#{card.front}} %></td>
+      <td width="2" height="200"></td>
+      <td width="325" height="200" class="learn"><%= %Q{#{card.back}} %></td>
+    </tr>
+  </table>
+<% end %>
+</span>

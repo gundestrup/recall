@@ -1,0 +1,8 @@
+<h1>Editing categories_type</h1>
+
+<% form_tag :action => 'update', :id => @categories_type do %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag 'Edit' %>
+<% end %>
+
+<%= link_to '<img src="/images/icons/back.png" width="35" height="35" alt="Back" class="img" />', :action => 'list' %>

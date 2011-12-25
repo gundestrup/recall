@@ -1,0 +1,32 @@
+<h1>Welcome, <%= current_user.name %></h1>
+<table width="600" border="0" cellspacing="15" cellpadding="15">
+  <tr>
+    <td>   
+	<%= link_to '<img src="/images/icons/edit_add.png" width="52" height="52" alt="add" />', :controller =>'piles', :action => 'new_pile' %>
+	</td>
+    <td width="100" align="right">
+        <%= link_to '<small>edit details</small>', :action => 'edit', :id => current_user.id %><br/>
+        <%= current_user.title %><br />
+        <%= current_user.name %><br />
+        <%= current_user.email %><br />
+        <%= current_user.login %><br />
+    </td>
+  </tr>
+  <tr>
+    <td><b>Your piles</b><br/>
+<table>
+<%@piles=current_user.piles%>
+<% for pile in @piles %>
+  <tr>
+   <td><%= link_to pile.name, :controller =>'piles', :action => 'show', :id => pile %></td>
+   	<td><%= link_to '<img src="/images/buttons/Learn_icon.png" width="75" height="26" alt="Learn" class="img" />',:controller => 'piles', :action => 'learn', :id => pile %></td>
+    <td><%= link_to '<img src="/images/icons/edit.png" width="25" height="25" alt="Edit" class="img" />',:controller => 'piles', :action => 'edit', :id => pile %></td>
+      <td><%= link_to '<img src="/images/icons/editdelete.png" width="20" height="20" alt="Destroy" class="img" />', { :controller =>'piles', :action => 'destroy', :id => pile }, :confirm => 'Are you sure?', :method => :post %></td>
+  </tr>
+<% end %>
+</table>
+</td>
+    <td width="200" ><b>Recently Viewed Piles</b></td>
+  </tr>
+</table>
+Account options<br />

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+    <head>
+      <meta http-equiv="content-type"
+      content="text/html;charset=utf-8" />
+    	<meta http-equiv="Content-Style-Type" content="text/css" />
+    	<meta id="viewport" name="viewport" content="width=240; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+    	<meta name="MobileOptimized" content="width=240" />
+    	<meta name="HandheldFriendly" content="true" />
+    	<meta name="apple-touch-fullscreen" content="YES" />
+      	<title>ReCALL - Because you can</title>        
+        <%= javascript_include_tag :defaults %>
+         <%= stylesheet_link_tag "mobile" %>
+         <!--[if lt IE 7.]>
+         <script defer type="text/javascript" src="/javascripts/pngfix.js"></script>
+         <![endif]-->
+    </head>
+  
+    <body>
+        <div id="page">              
+          <div id="header" class="header">ReCALL - Because you can</div>
+          <div id="main"><%= yield %></div>
+
+          <div id="footer" style="font-size:12px">&copy; 2006 - <%= Time.now.year %> <a href="mailto:webmaster (AT) mednote (DOT) dk">Svend Gundestrup</a>
+              <!-- chart.dk unified trackercode - v1 -->
+			<script src='http://www.chart.dk/js/unified.asp' type="text/javascript"></script>
+			<script language='javascript' type="text/javascript">
+			 track_visitor(141424, '');
+			</script>
+			<noscript>
+			 <a href="http://www.chart.dk/ref.asp?id=141424" target="_blank">
+			  <img src="http://cluster.chart.dk/chart.asp?id=141424" border="0" alt="Chart.dk" />
+			 </a>
+			</noscript>
+			<!-- chart.dk unified trackercode - v1 -->
+                        <br/>
+                        <%= link_to 'desktop', :controller => 'search' %>                        
+        </div>          
+       </div>       
+    
+    </body>
+</html>

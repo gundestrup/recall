@@ -1,0 +1,27 @@
+<h1>Listing categories_types</h1>
+<% form_tag :methode => 'get' do %>
+    <p>
+        <%= text_field_tag :search, params[:search] %>
+        <%= submit_tag "Search", :name => nil %>
+    </p>
+
+<% end %>
+<%= link_to '<img src="/images/icons/edit_add.png" width="35" height="35" class="img" />', :action => 'new' %>
+<table>
+  <tr>
+  <% for column in CategoriesType.content_columns %>
+    <th><%= column.human_name %></th>
+  <% end %>
+  </tr>
+  
+<% for categories_type in @categories_types %>
+  <tr>
+    <td><%= link_to categories_type.name, :action => 'show', :id => categories_type %></td>
+    <td><%= link_to '<img src="/images/icons/edit.png" width="25" height="25" alt="Edit" class="img" />', :action => 'edit', :id => categories_type %></td>
+    <td><%= link_to '<img src="/images/icons/editdelete.png" width="25" height="25" alt="Destroy" class="img" />', { :action => 'destroy', :id => categories_type }, :confirm => 'Are you sure?', :method => :post %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @categories_types %>
+<br />

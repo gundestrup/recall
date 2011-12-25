@@ -1,0 +1,30 @@
+<%= auto_discovery_link_tag(:rss, {:controller => 'categories', :action => 'show', :id => params[:id], :format => 'rss'}, :title=>'New piles in '+@category.name) %>
+  <h2>Category: <%= @category.name %></h2>
+<%= link_to '<img src="/images/icons/back.png" width="35" height="35" alt="Back" class="img" />', :controller => 'search' %>&nbsp; &nbsp;
+<% if "1" == "2" %> 
+<%= link_to '<img src="/images/icons/edit.png" width="35" height="35" alt="Edit" class="img" />', :action => 'edit', :id => @category %>
+<% end %>
+<%= link_to '<img src="/images/icons/edit_add.png" width="35" height="35" class="img" />', :controller =>'piles', :action => 'new' %>
+<h3>Piles</h3>
+<table>
+  <tr>
+      <td>Name (cards)</td>
+      <td>Created</td>
+      <td>Usage</td>      
+  </tr>
+  
+<% for pile in @category.piles %>
+  <tr>
+  	<td><%= link_to pile.name, :controller =>'piles', :action => 'show', :id => pile%>(<%= Card.count(:all, :conditions => ["pile_id = ?", pile.id ]) %>)</td>
+	<td><%= pile.created_at.year.to_s + '-'+ pile.created_at.mon.to_s + '-'+ pile.created_at.day.to_s  %> </td>
+      <td><%= pile.popularity %></td>
+    <% if logged_in? %>
+          <% if current_user.id == pile.user_id or current_user.admin? %>
+            <td><%= link_to '<img src="/images/icons/edit.png" width="25" height="25" alt="Edit" class="img" />', :controller =>'piles', :action => 'edit', :id => pile %></td>
+            <td><%= link_to '<img src="/images/icons/editdelete.png" width="25" height="25" alt="Destroy" class="img" />', { :controller =>'piles', :action => 'destroy', :id => pile }, :confirm => 'Are you sure?', :method => :post %></td>
+          <% end %>
+    <% end %>
+  </tr>
+<% end %>
+</table>
+<%= link_to '<img src="/images/icons/edit_add.png" width="35" height="35" class="img" />', :controller =>'piles', :action => 'new' %>

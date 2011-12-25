@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type"
+		content="text/html;charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="google-site-verification" content="zectt3xQqCZvHqg3e-xjjhVhoA5oag4K6n22fTOLHVI" />
+  <meta name="y_key" content="9fb55255d31de0ca"/>
+  <meta name="msvalidate.01" content="7BAE1F7BF6609A3CE2995BB5E5B01D93" />
+  <title>
+    ReCALL - Because you can - 
+        <% if @category.present? or @card.present? or @pile.present? and controller.action_name != 'new' %>       
+        {  
+            <% if @category.present? %>
+            Category: <%= @category.name %>
+            <% end %>
+            <% if @pile.present? %>
+            Category: <%= @pile.category.name %> -> Pile: <%= @pile.name %> <% if @cards.present? %> -> <% for card in @cards %><%= card.head %><% end %><% end %>
+			<% end %>
+            <% if @card.present? %>
+            Category: <%= @card.pile.category.name %> -> Pile: <%= @card.pile.name %> -> Card: <%= @card.head %>
+            <% end %>        
+        }
+        <% else %>
+        (<%= controller.controller_name.to_s + " - " + controller.action_name.to_s %>)
+        <% end %>
+  </title>
+ 	<%= include_tiny_mce_if_needed %>
+    <%= javascript_include_tag :defaults %>
+        
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<%= stylesheet_link_tag "application" %>
+	<!--[if lt IE 7.]>
+    <script defer type="text/javascript" src="/javascripts/pngfix.js"></script>
+    <![endif]-->  
+  <% auto_discovery_link_tag(:atom, {:controller => 'piles', :action => 'feed', :format => 'atom'}) %>
+  <%= auto_discovery_link_tag(:rss, {:controller => 'piles', :action => 'feed', :format => 'rss'}, :title=>'New piles in ReCALL') %>
+</head>
+    <body>
+        <% tabnav :main do %>
+        <div id="page">
+              <div id="sidebar">
+                <% link_to 'English', root_path(:locale => 'en') %>
+                <% link_to 'Dansk', root_path(:locale => 'da') %>
+                <dl>
+                    <dt><%= link_to '<img src="/images/buttons/Search.png" width="100" height="36" alt="Search" />',:controller => 'search' %></dt>
+                    <dt><%= link_to 'Getting started', :controller => 'info', :action => "getting_started" %></dt>
+                    <dt>&nbsp;</dt>
+                    <dt><%= link_to 'Help', :controller => 'info', :action => "help" %></dt>
+                    <dt>&nbsp;</dt>
+                    <dt><%= link_to 'Statistics', :controller => 'info', :action => "statistics" %></dt>
+                    <dt>&nbsp;</dt>
+                    <dt><%= link_to 'History', :controller => 'info', :action => "history" %></dt>
+                    <dt>&nbsp;</dt>
+                    <dt>&nbsp;</dt>
+                    <% if controller.controller_name == "categories" && controller.action_name == "show" %>
+                        <dt><%= link_to '<img src="/images/icons/edit_add.png" width="35" height="35" class="img" alt="add piles" />', :controller =>'piles', :action => 'new' %></dt>
+                    <% end %>
+                    <% if controller.controller_name == "piles" && if controller.action_name == "show" %>
+                        <dt><%= link_to '<img src="/images/buttons/Learn_icon.png" width="100" height="36" class="img" alt="learn piles" />', :action => 'learn', :id => @pile %></dt>
+                        <% if logged_in? %>
+                            <% if allowed(@pile) %>
+                            <dt><%= link_to '<img src="/images/icons/edit_add.png" width="35" height="35" class="img" alt="new cards" />', :controller => "cards", :action => 'new', :id => @card %></dt>
+                                <dt>
+                                    &nbsp;
+                                </dt>
+                                <dt>
+                                    <%= render :partial => "importexport" %>
+                                </dt>
+                        <% end %>
+                            <% end %>
+                    <% end %>
+                    <% end %>
+                    <% if logged_in? && controller.controller_name == "cards" && controller.action_name == "show" %>
+                        <% if current_user.id == @card.user_id or current_user.admin? %>
+                            <dt><%= link_to '<img src="/images/icons/edit.png" width="35" height="35" alt="Save" class="img" alt="edit cards" />', :action => 'edit', :id => @card %></dt>
+                        <% end %>
+                    <% end %>
+                </dl>
+                <% if controller.action_name == 'learn' %>
+                <dl>
+                  <dt>
+                  Keyboard Shortcuts:<br/>
+                  "Up", stop learning<br/>
+                  "Down",  anwser<br/>
+                  "Right",next card<br/>
+                  "Left", last card<br/>
+                  </dt>
+                  
+                </dl>
+                    <% end %>
+              </div>
+
+              <div id="content">
+                <div id="header" style="font-size: 24px">
+                  <b>ReCALL - Because you can</b>
+                </div>
+
+                <div id="main">
+                <% if flash[:notice] or flash[:error] %>
+                    <div id="flash">
+                            <div class="flash" id="notice"><%= flash[:notice] %></div>
+                            <div class="flash" id ="error"><%= flash[:error] %></div>
+                    
+                    </div>
+                      <script type="text/javascript">
+                          setTimeout("new Effect.Fade('notice');", 2000)                        
+                          setTimeout("new Effect.Fade('error');", 15000)
+                        </script>                      
+                <% end %>
+                  <% if controller.action_name != 'new' %>
+                  <div id="breadcrum">
+                    <div class="breadcrum" id="navigation">
+                      <% if @category.present? %>
+                        <%= @category.name %>
+                        <% end %>
+                        <% if @pile.present? %>
+                        <%= breadcrum @pile.category.name, 'categories', @pile.category.id %> -> <%= @pile.name %>
+                        <% end  %>
+                        <% if @card.present? %>
+                        <%= breadcrum @card.pile.category.name, 'categories', @card.pile.category.id %> -> <%= breadcrum @card.pile.name, 'piles', @card.pile.id %> -> <%= @card.head %>
+                        <% end %>
+                      </div>
+                  </div>
+                      <% end %>
+                 <%= yield %>
+                </div>
+              </div>
+            <% end %>
+
+          <div id="footer">&copy; 2006 - <%= Time.now.year %> Svend Gundestrup, Last update <%= $update %>
+              <!-- chart.dk unified trackercode - v1 -->
+			<script src='http://www.chart.dk/js/unified.asp' type="text/javascript"></script>
+			<script language='javascript' type="text/javascript">
+			 track_visitor(141424, '');
+			</script>
+			<noscript>
+			 <a href="http://www.chart.dk/ref.asp?id=141424" target="_blank">
+			  <img src="http://cluster.chart.dk/chart.asp?id=141424" border="0" alt="Chart.dk" />
+			 </a>
+			</noscript>
+			<!-- chart.dk unified trackercode - v1 -->
+          <a href="mailto:webmaster (AT) mednote (DOT) dk"><img
+            src="/images/webmasterATmednoteDK_r.png"
+            alt="Webmaster e-mail" height="21" width="220" align="right" /></a> |
+			<a href="https://bitbucket.org/gundestrup/recall">Source Code</a>
+        </div>
+       </div>
+       <br />
+       <a href="http://www.spreadfirefox.com/?q=affiliates&amp;id=0&amp;t=209">
+            <img border="0" alt="Firefox 3" title="Firefox 3" align="right" src="http://sfx-images.mozilla.org/affiliates/Buttons/firefox2/firefox-spread-btn-1.png"/></a>
+          <a href="http://validator.w3.org/check?uri=referer"><img
+            src="http://www.w3.org/Icons/valid-xhtml10"
+            alt="Valid XHTML 1.0 Transitional" height="31" width="88" align="right" /></a>
+    </body>
+</html>

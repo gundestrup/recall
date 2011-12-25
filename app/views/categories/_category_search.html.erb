@@ -1,0 +1,33 @@
+<% if @total == 0 %>
+
+<p>No category found...</p>
+
+<% else %>
+
+<p>Number of categories : <b><%= @total %></b></p>
+
+<p>
+<% if @category_pages.page_count > 1 %>
+Page&nbsp;:
+<%= pagination_links_remote @category_pages %>
+<% end %>
+</p>
+<table>
+  <thead>
+    <tr>
+      <td <%= sort_td_class_helper "name" %> style="border-bottom-width:1px;border-bottom-style:solid;border-bottom-color: #cccccc">
+        <%= sort_link_helper "Name", "name" %>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @category.each do |i| %>
+    <tr class="<%= cycle("even","odd") %>">
+    	<% @p = i %>
+      <td><%= link_to i.name, :action => 'show', :id => i %> (<%= Pile.count(["category_id = ?", @p.id]) %>)</td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% end %>

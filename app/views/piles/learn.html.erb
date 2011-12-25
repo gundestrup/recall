@@ -1,0 +1,67 @@
+<script type="text/javascript">
+                document.observe('keydown', function(k) {
+                        if (k.keyCode != 37) return;
+                        //pressing left
+                        <% if params[:page] == nil or params[:page].to_i == 1 %>
+                        window.location='/piles/show/<%=@pile.id %>';
+                        <% else %>
+                        window.location='/piles/learn/<%=@pile.id %>\?page=<%=params[:page].to_i-1 %>';
+                        <% end %>
+                });
+                document.observe('keydown', function(k) {
+                        if (k.keyCode != 39) return;
+                        //pressing right
+                        <% if params[:page] == nil %>
+                        window.location='/piles/learn/<%=@pile.id %>\?page=2';
+                        <% else %>
+                        window.location='/piles/learn/<%=@pile.id %>\?page=<%=params[:page].to_i+1 %>';
+                        <% end %>
+                });
+                document.observe('keydown', function(k) {
+                        if (k.keyCode != 38) return;
+                        //pressing up
+                        window.location='/categories/show/<%=@pile.category.id %>'
+                });
+                document.observe('keydown', function(k) {
+                        if (k.keyCode != 40) return;
+                        //pressing down
+                        <% for card in @cards %>
+                        Effect.Fade(document.getElementById('Question<%= card.id %>'),{duration:0.15});Effect.Appear(document.getElementById('Card<%=  card.id %>'),{delay: 0.2});
+                        <% end %>
+                });
+
+        </script> 
+<div style="font-size: 24px"><%= link_to '<img src="/images/icons/back.png" width="35" height="35" alt="Pile" class="img" />', :action => 'show', :id => @pile %>&nbsp;<%= @pile.name %></div>
+<div class="counter">
+
+ </div>
+
+<table width="650" border="0" cellspacing="5">
+<% for card in @cards %>
+  <tr>
+    <td height="20" colspan="4" style="text-align: center; color: black; border: 1px solid lightgray; -moz-border-radius: 5px; -webkit-border-radius: 5px; border: 1px solid #000; background-color: #F8F8FF; padding: 10px;"><big><big><%= %Q{#{card.head}} %></big></big></td>
+  </tr>
+  <tr>
+    <td style="text-align: center" width="50%" colspan="2">Question</td>
+    <td style="text-align: center" width="50%" colspan="2">Answer</td>
+  </tr>
+  <tr>
+    <td height="250px"  colspan= "2" class="learnquestion" ><%= %Q{#{card.front}} %></td>
+    <td height="250px"  colspan= "2" class="learnanwser"  onclick="new Effect.Fade(document.getElementById('Question<%= card.id %>'),{duration:0.15});Effect.Appear(document.getElementById('Card<%=  card.id %>'),{delay: 0.2})"><div id="Question<%= card.id %>"><img src="/images/icons/question.png" width="100" alt="Anwser" align ="left" hspace="85px" /></div>
+	  <div id="Card<%= card.id %>" style="float: none; display: none; ">
+          <div><%= %Q{#{card.back}} %></div>
+      </div></td>
+  </tr>
+  <tr>
+    <td colspan="4" bgcolor="#FFFFFF" style="color: black; border: 1px solid lightgray" >Referance: <%= %Q{#{card.note}} %></td>
+  </tr>
+  <tr>
+    <td width="56">&nbsp;</td>
+    <td colspan="2">&nbsp;</td>
+    <td width="562">Author: <%= %Q{#{card.user.name}}  %></td>
+  </tr>
+  <tr>
+      <td colspan="4" style="text-align: center" ><%= will_paginate @cards %></td>
+  </tr>
+  <% end %>
+</table>

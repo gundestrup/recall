@@ -1,0 +1,12 @@
+<%= link_to 'Back', :action => 'index', :format => 'mobile' %>&nbsp;|&nbsp;<%= @category.name %>
+<hr/>
+<div class="list">
+  <ul title="<%= @category.name %> " selected="true">
+    <% for pile in @category.piles %>
+      <li>
+      <%= link_to pile.name+' ('+pile.cards.count.to_s+')', :controller => 'piles', :action => 'learn', :id => pile.id, :format => 'mobile' %>
+      </li>
+    <% end %>
+  </ul>  
+</div>
+

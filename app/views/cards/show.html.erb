@@ -1,0 +1,25 @@
+<% # Include TinyMCE before other JS to avoid problems -%>
+<%= tiny_mce if using_tiny_mce? %>
+<table>
+<tr>
+<td><b>Head</b></td> <td> <%= @card.send("head") %></td>
+</tr>
+<tr>
+<td><b>Front </b></td> <td> <%= @card.send("front") %></td>
+</tr>
+<tr>
+<td><b>Back </b></td> <td><%= @card.send("back") %> </td>
+</tr>
+<tr>
+<td><b>Note </b></td> <td><%= @card.send("note") %></td>
+</tr>
+</table>
+<br />
+
+<%= link_to '<img src="/images/icons/back.png" width="35" height="35" alt="Back" class="img" />', :controller => "piles", :action => 'show', :id => @card.pile_id %>&nbsp; &nbsp;
+<% if logged_in? %>
+    <% if current_user.id == @card.user_id or current_user.admin? %>
+        <%= link_to '<img src="/images/icons/edit.png" width="35" height="35" alt="Save" class="img" />', :action => 'edit', :id => @card %>
+    <% end %>
+<% end %>
+<br />

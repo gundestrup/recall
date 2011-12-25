@@ -1,0 +1,65 @@
+<script type="text/javascript">
+                document.observe('keydown', function(k) {
+                        if (k.keyCode != 38) return;
+                        //pressing up
+                        window.location='/category/show/<%=@pile.category.id %>'
+                });
+                document.observe('keydown', function(k) {
+                        if (k.keyCode != 40) return;
+                        //pressing down
+                        window.location='/pile/learn/<%=@pile.id %>'
+                });
+
+        </script>
+<big><big><big><big><%= @pile.name %></big></big></big></big>
+<%= link_to '<img src="/images/buttons/Learn_icon.png" width="100" height="36" alt="Learn" class="img" />', :action => 'learn', :id => @pile %>
+<% if logged_in? %>
+    <%if allowed(@pile) %>
+        <%= link_to '<img src="/images/icons/edit.png" width="20" height="20" alt="Edit" class="img" />', :action => 'edit', :id => @pile %>
+        <%= link_to '<img src="/images/icons/editdelete.png" width="20" height="20" alt="Destroy" class="img" />', { :controller =>'piles', :action => 'destroy', :id => @pile.id }, :confirm => 'Are you sure?', :method => :post %>
+    <% end %>
+<% end %>
+<br />
+Author: <%= @pile.user.name  %>
+<span class="infobox">
+  Shortcuts:<br/>
+  Press "Up", gets you back to the category<br/>
+  Press "Down", starts learn<br/>
+  <br/>
+  During learning:<br/>
+  Press: "Up", gets you back to the pile<br/>
+  Press: "Down", to see the anwser<br/>
+  Press: "Right", to see next card<br/>
+  Press: "Left", to see previours card<br/>
+</span>
+<br />
+<% if logged_in? %>
+    	<% if allowed(@pile) %>
+        <%= show_box_for @pile.id, :link_name=> '<img src="/images/icons/edit_add.png" width="35" height="35" class="img" />' %>
+		                    <% detail_box_for @pile.id do %>
+		                    <%= hide_box_for @pile.id, :link_name=> 'Close' %> 
+							 | <%= link_to 'Add advanced cards', :controller =>'cards', :action => 'new' %>
+		            <% form_remote_tag(:url => {:action => :create_card},
+		                              :update => 'cards',
+									  :complete => visual_effect(:highlight, "cards")
+		                              #:html => {:id => 'card_form'}
+		                              ) do  %>
+									<%= error_messages_for :card %>					
+									<%= flash[:status] %>
+		            <table>
+							<tr>
+		                        <th>Front</th><th>Back<th/>
+		                    </tr>
+		                    <tr>
+		                        <td><%= text_area :card, :front, :rows=> "15", :cols=> "30" %></td>
+								<td><%= text_area :card, :back, :rows=> "15", :cols=> "30" %></td>
+		                    </tr>
+							<%= hidden_field :card, :pile_id, :value => @pile.id %>
+
+		            </table>
+		            <%= submit_tag 'Add' %>
+		        <% end %>
+		    <% end %>
+    <% end %>
+<% end %>
+<%= render :partial => 'cards' %>

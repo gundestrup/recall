@@ -1,0 +1,6 @@
+<%= form_tag :action => "activate" %>
+<p><label for="activation_code">Activation Code</label><br/>
+<%= text_field(:activation_code, @params[:activation_code], :size=>50 ) %>
+</p>
+<p><%= submit_tag 'Activate' %></p>
+<%= form_tag %>

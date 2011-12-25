@@ -1,0 +1,98 @@
+<table class="box">
+    <tr>
+        <th colspan="4">Overview</th>
+    </tr>
+    <tr>
+        <td>
+            Categories
+        </td>
+        <td>
+            Piles
+        </td>
+        <td>
+            Cards
+        </td>
+        <td>
+            Users
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <%= @total_categories %>
+        </td>
+        <td>
+           <%= @total_piles %>
+        </td>
+        <td>
+            <%= @total_cards %>
+        </td>
+        <td>
+            <%= @total_users %>
+        </td>
+
+    </tr>
+</table>
+<table class="box" align="right">
+    <tr>
+        <td><b>Most popular piles</b></td>
+    </tr>
+    <% for pile in @popular_pile %>
+        <tr>
+            <td>
+                <%= link_to pile.name, :controller => "piles", :action => 'show', :id => pile.id %>(<%= pile.popularity %>)
+                <br/>
+                <small>(<%=  pile.category.name %>)</small>
+            </td>
+        </tr>
+    <% end %>
+</table>
+<table class="box" >
+    <tr>
+        <td>
+            <b>Newest Piles</b>
+        </td>
+    </tr>
+    <% for pile in @latest_pile %>
+        <tr>
+            <td>
+                <%= link_to pile.name, :controller => "piles", :action => 'show', :id => pile.id %>(<%= Card.count(:all, :conditions => ["pile_id = ?", pile.id]) %>)
+                <br/>
+                <small>(<%=  pile.category.name %>)</small>
+            </td>
+        </tr>
+    <% end %>
+</table>
+
+<br />
+<table class="box">
+<tr>
+	<td>
+		<b>Updated Cards</b>
+	</td>
+</tr>
+<% for card in @updated_card %>
+<tr>
+    <td><%= link_to card.head, :controller => "cards", :action => 'show', :id => card %>
+    <br/>
+        <small>(<%=  card.pile.category.name %>)</small>
+    </td>
+    <td><small>( <%= link_to card.pile.name, :controller => "piles", :action => "show", :id => card.pile_id %> )</small></td>
+</tr>
+<% end %>
+</table>
+<table class="box">
+    <tr>
+        <td>
+            <b>Newest Cards</b>
+        </td>
+    </tr>
+    <% for card in @latest_card %>
+        <tr>
+            <td><%= link_to card.head, :controller => "cards", :action => 'show', :id => card %>
+            <br/>
+                <small>(<%=  card.pile.category.name %>)</small>
+            </td>
+            <td><small>( <%= link_to card.pile.name, :controller => "piles", :action => "show", :id => card.pile_id %> )</small></td>
+        </tr>
+    <% end %>
+</table>
