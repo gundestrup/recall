@@ -60,7 +60,7 @@ Rails::Initializer.run do |config|
     # Gems       
     config.gem "fastercsv"
     config.gem 'tiny_mce' # removed from vendor/plugin to gem | https://github.com/kete/tiny_mce'
-    config.gem 'will_paginate', :version => '~> 2.3.11', :source => 'http://gemcutter.org'
+    config.gem 'will_paginate', :version => '~> 2.3.16', :source => 'http://gemcutter.org'
     #config.gem "cucumber"
     #config.gem "gherkin"
     config.gem "rspec"
