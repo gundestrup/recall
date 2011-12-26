@@ -2,4 +2,17 @@
 ReCALL is a RoR based flashcard learning system for medical students.
 
 How to install?
-Rename and change all files that include *example* in the filename.
+Rename and change all files here:
+/config/database.example.yml
+/config/environment.example.rb
+/vendor/plugin/sitealizer/lib/config.example.yml
+
+to match your installation
+
+Gems?
+Rails 2.3.14
+fastercsv
+tiny_mce
+will_paginate version 2.3.16
+rspec
+gherkin
