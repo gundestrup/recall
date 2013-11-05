@@ -17,7 +17,7 @@
         </tr>
         <% @categories.each do |category| %>
             <tr>
-                <td><%= link_to category.name, :controller => 'categories', :action => 'show', :id => category.id %></td><td> (<%= Pile.count(:all, :conditions => ["category_id = ?", category.id] ) %> | <%= Card.count(:all, :include => :pile, :conditions => ["category_id = ?", category.id]  ) %>)</td>
+                <td><%= link_to category.name, :controller => 'category', :action => 'show', :id => category.id %></td><td> (<%= Pile.count(:all, :conditions => ["category_id = ?", category.id] ) %> | <%= Card.count(:all, :include => :pile, :conditions => ["category_id = ?", category.id]  ) %>)</td>
                 <% if logged_in? && current_user.admin? %>
                   <td><%= link_to '<img src="/images/icons/edit.png" width="25" height="25" alt="Edit" class="img" />', :controller => 'categories', :action => 'edit', :id => category.id %></td>
                   <td><%= link_to '<img src="/images/icons/editdelete.png" width="25" height="25" alt="Destroy" class="img" />', { :controller => 'categories', :action => 'destroy', :id => category.id }, :confirm => 'Are you sure?', :method => :post %></td>
