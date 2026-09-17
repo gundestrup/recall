@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "permissions": {
+    "allow": [
+      "Exec(bundle)",
+      "Exec(bin/rails)",
+      "Exec(bin/rake)",
+      "Exec(bin/jobs)",
+      "Exec(./bin/check-tests)",
+      "Exec(./bin/check-quality)",
+      "Exec(./bin/check-security)",
+      "Exec(./bin/check-all)",
+      "Exec(rake)"
+    ]
+  },
+  "read_config_from": {
+    "windsurf": true,
+    "claude": true
+  }
+}
