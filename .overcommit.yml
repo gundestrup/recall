@@ -1,0 +1,74 @@
+# Overcommit configuration for pre-commit hooks
+# https://github.com/brigade/overcommit
+
+PreCommit:
+  # RuboCop style checking
+  RuboCop:
+    enabled: true
+    command: ['bundle', 'exec', 'rubocop']
+    on_failure: warn
+    
+  # Brakeman security scanning
+  Brakeman:
+    enabled: true
+    command: ['bundle', 'exec', 'brakeman', '--quiet', '--no-pager']
+    on_failure: warn
+    
+  # Code smell detection
+  Reek:
+    enabled: true
+    command: ['bundle', 'exec', 'reek']
+    on_failure: warn
+    
+  # Performance checks
+  Fasterer:
+    enabled: true
+    command: ['bundle', 'exec', 'fasterer']
+    on_failure: warn
+    
+  # Rails best practices
+  RailsBestPractices:
+    enabled: true
+    command: ['bundle', 'exec', 'rails_best_practices']
+    on_failure: warn
+    
+  # Security audit for gems
+  BundleAudit:
+    enabled: true
+    command: ['bundle', 'exec', 'bundler-audit']
+    on_failure: warn
+
+  # Annotate models and routes if schema changed
+  Annotate:
+    enabled: true
+    command: ['bundle', 'exec', 'annotaterb', 'models', '--exclude', 'tests,fixtures,factories', '&&', 'bundle', 'exec', 'annotaterb', 'routes']
+    on_failure: warn
+    include:
+      - 'db/schema.rb'
+      - 'db/migrate/*.rb'
+      - 'app/models/*.rb'
+      - 'config/routes.rb'
+
+  # Prevent large commits
+  HardTabs:
+    enabled: true
+    
+  # Check for merge conflict markers
+  MergeConflicts:
+    enabled: true
+
+  # Run a subset of tests before commit
+  RailsTest:
+    enabled: true
+    command: ['./bin/check-tests']
+    on_failure: warn
+
+# Optional: Run tests before push
+# NOTE: overcommit appends push args (remote name + URL) to the command —
+# a bare `rails test` tries to load them as test files. The bin/ wrapper
+# script ignores the extra arguments.
+PrePush:
+  RailsTest:
+    enabled: true
+    command: ['./bin/check-tests']
+    on_failure: fail
