@@ -1,0 +1,65 @@
+#!/bin/bash
+set -e
+
+# PostgreSQL paths for brew installation
+POSTGRES_PATH="/opt/homebrew/opt/postgresql@18/bin"
+PG_ISREADY="$POSTGRES_PATH/pg_isready"
+CREATEDB="$POSTGRES_PATH/createdb"
+PSQL="$POSTGRES_PATH/psql"
+
+echo "🚀 Setting up PostgreSQL development environment for svend..."
+
+# Check if PostgreSQL 18 is running
+if ! "$PG_ISREADY" -h localhost -p 5432 >/dev/null 2>&1; then
+    echo "❌ PostgreSQL is not running on localhost:5432"
+    echo "Please start PostgreSQL 18 and try again."
+    echo "For brew installation: brew services start postgresql@18"
+    exit 1
+fi
+
+echo "✅ PostgreSQL is running on localhost:5432"
+
+# Check if .env.development exists
+if [ ! -f .env.development ]; then
+    echo "📝 Creating .env.development from template..."
+    cp .env.development.erb .env.development
+    echo "✅ .env.development created"
+fi
+
+# Generate secrets if not provided
+if [ -z "$SECRET_KEY_BASE" ]; then
+    echo "🔑 Generating SECRET_KEY_BASE..."
+    SECRET_KEY_BASE=$(bin/rails secret)
+fi
+
+if [ -z "$RAILS_MASTER_KEY" ]; then
+    echo "🔑 Generating RAILS_MASTER_KEY..."
+    RAILS_MASTER_KEY=$(bin/rails secret)
+fi
+
+# Update .env.development with secrets
+sed -i.bak "s/<%= ENV\['SECRET_KEY_BASE'\] || 'development_secret_key_base' %>/$SECRET_KEY_BASE/g" .env.development
+sed -i.bak "s/<%= ENV\['RAILS_MASTER_KEY'\] || 'development_master_key' %>/$RAILS_MASTER_KEY/g" .env.development
+
+# Clean up backup files
+rm -f .env.development.bak
+
+# Create databases (svend user should have privileges)
+echo "🗄️ Creating databases..."
+"$CREATEDB" -h localhost -U svend recall_devel 2>/dev/null || echo "Database 'recall_devel' already exists"
+"$CREATEDB" -h localhost -U svend recall_test 2>/dev/null || echo "Database 'recall_test' already exists"
+
+# Install dependencies
+echo "💎 Installing Ruby dependencies..."
+bundle install
+
+# Setup database
+echo "🗄️ Setting up database..."
+bin/rails db:create db:migrate db:seed
+
+echo "✅ PostgreSQL development environment setup complete!"
+echo "🌐 Run 'bin/rails server' to start the application"
+echo "🔧 Your configuration:"
+echo "   - Database: recall_devel (PostgreSQL 18)"
+echo "   - User: svend (no password)"
+echo "   - Host: localhost:5432"

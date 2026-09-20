@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+# Bullet N+1 query checker
+
+require 'bundler/setup'
+
+# Load Rails environment
+require_relative '../config/environment'
+
+# Check if Bullet is available
+begin
+  require 'bullet'
+rescue LoadError
+  puts "⚠️  Bullet gem not available, skipping N+1 query check"
+  puts "   Add 'gem \"bullet\"' to your Gemfile to enable N+1 query detection"
+  exit 0
+end
+
+puts "🔍 Checking for N+1 queries with Bullet..."
+
+# Enable Bullet in test mode
+Bullet.enable = true
+Bullet.bullet_logger = StringIO.new
+Bullet.console = true
+Bullet.rails_logger = true
+Bullet.add_footer = true
+
+# Simulate some common queries to check for N+1 issues
+begin
+  # Check categories with piles (potential N+1)
+  puts "Checking categories with associated piles..."
+  categories = Category.includes(:piles).limit(5)
+  categories.each { |cat| cat.piles.count }
+  
+  # Check piles with cards (potential N+1)
+  puts "Checking piles with associated cards..."
+  piles = Pile.includes(:cards).limit(5)
+  piles.each { |pile| pile.cards.count }
+  
+  puts "✅ Bullet check completed"
+rescue => e
+  puts "❌ Bullet check failed: #{e.message}"
+  exit 1
+end

@@ -1,0 +1,104 @@
+#!/usr/bin/env ruby
+# Code quality and linting checks
+
+def run_command(name, command, critical: true)
+  print "#{name}... "
+  result = system(command)
+  
+  if result
+    puts "✅ PASS"
+  else
+    if critical
+      puts "❌ FAIL"
+      return false
+    else
+      puts "⚠️  WARN (continuing)"
+    end
+  end
+  true
+end
+
+def run_rubocop_with_fix
+  puts "🔍 Running RuboCop..."
+  result = system("bundle exec rubocop --format simple")
+  
+  if result
+    puts "✅ RuboCop PASS"
+    return true
+  else
+    puts "❌ RuboCop FAIL"
+    puts ""
+    puts "RuboCop found style violations. Would you like to:"
+    puts "1. Run 'rubocop -a' to auto-fix offenses"
+    puts "2. Continue anyway (not recommended)"
+    puts "3. Exit"
+    print "Choose option (1/2/3): "
+
+    # Non-interactive stdin (CI, pipes): gets returns nil — treat as exit,
+    # don't crash on nil.chomp.
+    choice = (gets || "3").chomp.downcase
+    
+    case choice
+    when '1'
+      puts "🔧 Running RuboCop auto-fix..."
+      fix_result = system("bundle exec rubocop -a --format simple")
+      
+      if fix_result
+        puts "✅ Auto-fix completed"
+        puts ""
+        puts "🔄 Re-running RuboCop check..."
+        check_result = system("bundle exec rubocop --format simple")
+        
+        if check_result
+          puts "✅ RuboCop PASS after auto-fix"
+          return true
+        else
+          puts "❌ RuboCop still has violations after auto-fix"
+          puts "Please fix remaining offenses manually and re-run"
+          return false
+        end
+      else
+        puts "❌ Auto-fix failed"
+        return false
+      end
+    when '2'
+      puts "⚠️  Continuing despite RuboCop violations (not recommended)"
+      return true
+    when '3'
+      puts "🛑 Exiting"
+      exit 1
+    else
+      puts "❌ Invalid choice"
+      exit 1
+    end
+  end
+end
+
+puts "🔍 Running code quality and linting checks..."
+puts "=" * 50
+
+# Style and linting (critical with auto-fix option)
+rubocop_passed = run_rubocop_with_fix
+exit 1 unless rubocop_passed
+
+# Performance checks (warnings ok)
+run_command("RuboCop Performance", "bundle exec rubocop --only Performance", critical: false)
+run_command("Fasterer", "bundle exec fasterer", critical: false)
+
+# Code quality (warnings ok)
+run_command("Rails Best Practices", "bundle exec rails_best_practices", critical: false)
+run_command("Reek", "bundle exec reek", critical: false)
+run_command("Flog", "bundle exec flog app/", critical: false)
+run_command("Flay", "bundle exec flay app/", critical: false)
+
+# N+1 queries (warnings ok)
+run_command("Bullet", "./bin/bullet-checker", critical: false)
+
+# Annotations (warnings ok)
+run_command("Annotations", "./bin/check-annotations", critical: false)
+
+# Background jobs (warnings ok)
+run_command("Solid Queue", "bundle exec rails runner 'puts defined?(SolidQueue) ? \"✅ Solid Queue configured\" : \"❌ Solid Queue not found\"'", critical: false)
+
+puts "=" * 50
+puts "🎉 Code quality checks passed!"

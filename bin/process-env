@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+# Process .env.*.erb templates into actual .env files
+
+require 'erb'
+require 'fileutils'
+
+def process_env_template(template_file, output_file)
+  unless File.exist?(template_file)
+    puts "❌ Template not found: #{template_file}"
+    return false
+  end
+
+  puts "📝 Processing #{template_file}..."
+  
+  # Read template
+  template_content = File.read(template_file)
+  
+  # Process ERB
+  result = ERB.new(template_content).result
+  
+  # Write output
+  File.write(output_file, result)
+  
+  puts "✅ Generated #{output_file}"
+  true
+end
+
+# Process development environment
+if process_env_template('.env.development.erb', '.env.development')
+  puts "\n🎉 Development environment file generated successfully!"
+  puts "📋 Review .env.development and adjust values as needed"
+end
+
+# Process production environment if template exists
+if File.exist?('.env.production.erb')
+  if process_env_template('.env.production.erb', '.env.production')
+    puts "\n🎉 Production environment file generated successfully!"
+    puts "⚠️  Remember to set secure values for production!"
+  end
+end
+
+puts "\n✨ Done!"

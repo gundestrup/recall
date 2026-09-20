@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+APP_PATH = File.expand_path("../config/application", __dir__)
+require_relative "../config/boot"
+
+coverage_requested = ENV.fetch("COVERAGE", "1") == "1"
+test_command = %w[test t].include?(ARGV.first)
+test_server = %w[server s].include?(ARGV.first) &&
+  (ENV["RAILS_ENV"] == "test" || ARGV.each_cons(2).any? { |a, b| %w[-e --environment].include?(a) && b == "test" })
+
+if coverage_requested && (ENV["RAILS_ENV"] == "test" || test_command || test_server)
+  require "simplecov"
+  SimpleCov.start "rails" do
+    enable_coverage :branch
+    skip %r{\Alib/tasks/}
+    command_name "rails-#{ARGV.first || 'process'}-#{Process.pid}"
+    merge_timeout 86_400
+  end
+end
+
+require "rails/commands"

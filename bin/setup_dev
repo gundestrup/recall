@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Development setup script
+echo "🚀 Setting up ReCALL development environment..."
+
+# 1. Install gems
+echo "📦 Installing gems..."
+bundle install
+
+# 2. Setup database
+echo "🗄️ Setting up database..."
+rails db:migrate
+rails db:seed
+
+# 3. Build Tailwind CSS
+echo "🎨 Building Tailwind CSS..."
+rails tailwindcss:build
+
+# 4. Precompile assets if needed
+echo "📋 Precompiling assets..."
+rails assets:precompile
+
+echo "✅ Development environment ready!"
+echo "🎯 Run './bin/dev' to start the development server"

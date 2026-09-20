@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+# Security vulnerability checks
+
+def run_command(name, command, critical: true)
+  print "#{name}... "
+  result = system(command)
+  
+  if result
+    puts "✅ PASS"
+  else
+    if critical
+      puts "❌ FAIL"
+      exit 1
+    else
+      puts "⚠️  WARN (continuing)"
+    end
+  end
+end
+
+puts "🔒 Running security vulnerability checks..."
+puts "=" * 50
+
+# Static analysis security scan
+run_command("Brakeman", "bundle exec brakeman --quiet --no-pager", critical: false)
+
+# Gem dependency security audit
+run_command("Bundle Audit", "bundle exec bundler-audit --update", critical: true)
+
+# JavaScript dependency security audit
+run_command("Importmap Audit", "./bin/importmap audit", critical: true)
+
+puts "=" * 50
+puts "🎉 Security checks passed!"

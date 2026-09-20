@@ -1,0 +1,149 @@
+#!/usr/bin/env ruby
+# Ruby and Rails deprecation scanner
+
+require "rubygems"
+
+puts "🔍 Scanning for Ruby #{RUBY_VERSION} + Rails deprecations..."
+puts "=" * 60
+
+# Check Ruby version
+ruby_version = Gem::Version.new(RUBY_VERSION)
+puts "Ruby Version: #{RUBY_VERSION}"
+puts ruby_version >= Gem::Version.new("3.4") ? "✅ Supported Ruby version" : "⚠️  Ruby version may be unsupported"
+
+# Check Rails version
+begin
+  require "rails"
+  rails_version = Gem::Version.new(Rails::VERSION::STRING)
+  puts "Rails Version: #{Rails::VERSION::STRING}"
+  puts rails_version >= Gem::Version.new("8.1") ? "✅ Rails 8.1+ detected" : "⚠️  Rails version predates the supported baseline"
+rescue LoadError
+  puts "❌ Rails not available"
+end
+
+scan_files = Dir.glob("{app,config,lib,db}/**/*.{rb,rake,erb,yml}")
+
+def scan_for_patterns(files, patterns)
+  patterns.each do |label, pattern|
+    puts "\n🔍 Checking for #{label}..."
+    results = files.flat_map do |file|
+      File.readlines(file).each_with_index.filter_map do |line, index|
+        next if line.lstrip.start_with?("#")
+
+        "#{file}:#{index + 1}:#{line.strip}" if line.match?(pattern)
+      end
+    rescue ArgumentError, EncodingError
+      []
+    end
+
+    if results.empty?
+      puts "✅ No #{label} found"
+    else
+      puts "❌ Found #{label}:"
+      results.each { |line| puts "   #{line}" }
+    end
+  end
+end
+
+puts "\n🔍 Checking for removed Ruby APIs..."
+scan_for_patterns(scan_files, {
+  "File.exists?" => /\bFile\.exists\?\b/,
+  "Dir.exists?" => /\bDir\.exists\?\b/,
+  "URI.escape" => /\bURI\.escape\b/,
+  "URI.unescape" => /\bURI\.unescape\b/,
+  "Fixnum" => /\bFixnum\b/,
+  "Bignum" => /\bBignum\b/,
+})
+
+puts "\n🔍 Checking for removed or deprecated Rails APIs..."
+scan_for_patterns(scan_files, {
+  "update_attributes" => /\bupdate_attributes\b/,
+  "update_attribute" => /\bupdate_attribute\b/,
+  "before_filter" => /\bbefore_filter\b/,
+  "after_filter" => /\bafter_filter\b/,
+  "around_filter" => /\baround_filter\b/,
+  "rails/console/methods.rb" => %r{rails/console/methods\.rb},
+  "STATS_DIRECTORIES" => /\bSTATS_DIRECTORIES\b/,
+  "ignore_leading_brackets" => /\bignore_leading_brackets\b/,
+  "signed_id_verifier_secret" => /\bsigned_id_verifier_secret\b/,
+  "mb_chars" => /\bmb_chars\b/,
+  "ActiveSupport::Configurable" => /\bActiveSupport::Configurable\b/,
+  "config.database_configuration" => /\bconfig\.database_configuration\b/,
+  "action_dispatch.show_exceptions = false" => /action_dispatch\.show_exceptions\s*=\s*false/,
+  "EventedFileUpdateChecker" => /\bEventedFileUpdateChecker\b/,
+})
+
+puts "\n🔍 Checking for syntax issues..."
+
+# Check Ruby syntax
+syntax_errors = []
+Dir.glob("app/**/*.rb").each do |file|
+  result = `ruby -c #{file} 2>&1`
+  unless result.include?("Syntax OK")
+    syntax_errors << "#{file}: #{result.strip}"
+  end
+end
+
+if syntax_errors.empty?
+  puts "✅ No syntax errors found"
+else
+  puts "❌ Syntax errors found:"
+  syntax_errors.each { |error| puts "   #{error}" }
+end
+
+puts "\n🔍 Checking for unsafe string interpolation..."
+
+# Check for unsafe string interpolation
+unsafe_patterns = %w[\#\{.*\}\.to_s \#\{.*\}\.inspect \#\{params\[.*\]\} \#\{ENV\[.*\]\}]
+
+unsafe_patterns.each do |pattern|
+  puts "\n🔍 Checking for #{pattern}..."
+  results = `grep -r "#{pattern}" app/ 2>/dev/null || true`
+  if results.strip.empty?
+    puts "✅ No #{pattern} found"
+  else
+    puts "⚠️  Found potentially unsafe #{pattern}:"
+    results.each_line do |line|
+      puts "   #{line.strip}"
+    end
+  end
+end
+
+puts "\n🔍 Running Rails deprecation check..."
+
+begin
+  # Load Rails environment
+  require File.expand_path('../config/environment', __dir__)
+  
+  # Check for ActiveSupport deprecations
+  puts "✅ Rails environment loaded"
+  
+  # Check for deprecated configurations
+  deprecated_configs = [
+    "config.active_record.raise_in_transactional_callbacks",
+    "config.action_controller.permit_all_parameters",
+    "config.serve_static_assets",
+    "config.static_cache_control",
+    "config.assets.compile = true",
+    "config.assets.digest = true"
+  ]
+  
+  deprecated_configs.each do |config|
+    puts "\n🔍 Checking for #{config}..."
+    results = `grep -r "#{config}" config/ 2>/dev/null || true`
+    if results.strip.empty?
+      puts "✅ No #{config} found"
+    else
+      puts "⚠️  Found #{config}:"
+      results.each_line do |line|
+        puts "   #{line.strip}"
+      end
+    end
+  end
+  
+rescue => e
+  puts "❌ Could not load Rails environment: #{e.message}"
+end
+
+puts "\n📊 Deprecation scan completed!"
+puts "💡 Review any ❌ or ⚠️ items above for potential updates"

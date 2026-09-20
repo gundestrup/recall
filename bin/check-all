@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+# Run all quality, security, and test checks
+
+def run_command(name, command, critical: true)
+  print "#{name}... "
+  result = system(command)
+  
+  if result
+    puts "✅ PASS"
+  else
+    if critical
+      puts "❌ FAIL"
+      exit 1
+    else
+      puts "⚠️  WARN (continuing)"
+    end
+  end
+end
+
+puts "🚀 Running ALL checks (quality, security, tests)..."
+puts "=" * 60
+
+# Code quality and linting
+puts "\n📝 Code Quality & Linting:"
+run_command("Code Quality", "./bin/check-quality", critical: true)
+
+# Security checks
+puts "\n🔒 Security:"
+run_command("Security", "./bin/check-security", critical: true)
+
+# Background jobs
+puts "\n🔄 Background Jobs:"
+run_command("Solid Queue", "bundle exec rails runner 'puts defined?(SolidQueue) ? \"✅ Solid Queue configured\" : \"❌ Solid Queue not found\"'", critical: false)
+
+# Test suite
+puts "\n🧪 Tests:"
+run_command("Tests", "./bin/check-tests", critical: true)
+
+puts "=" * 60
+puts "🎉 ALL CHECKS PASSED! Ready for deployment! 🚀"

@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+# Check and update annotations for models and routes using AnnotateRb
+
+def run_command(name, command, critical: true)
+  print "#{name}... "
+  result = system(command)
+  
+  if result
+    puts "✅ PASS"
+  else
+    if critical
+      puts "❌ FAIL"
+      exit 1
+    else
+      puts "⚠️  WARN (continuing)"
+    end
+  end
+end
+
+puts "📝 Checking and updating annotations with enhanced information..."
+puts "=" * 60
+
+# Use the enhanced auto-annotate rake task
+run_command("Enhanced Annotations", "bundle exec rake db:auto_annotate", critical: false)
+
+puts "=" * 60
+puts "🎉 Enhanced annotation checks completed!"
+puts "📋 Features: indexes, foreign keys, migration info, classified sorting"

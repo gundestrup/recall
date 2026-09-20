@@ -1,0 +1,32 @@
+#!/bin/bash
+set -e
+
+echo "Setting up development environment..."
+
+# Process environment template
+if [ -f .env.development.erb ]; then
+  echo "Processing .env.development.erb template..."
+  ./bin/process-env
+  echo "✅ Generated .env.development from template"
+  echo "📋 Review .env.development and adjust values as needed"
+else
+  echo "⚠️  No .env.development.erb template found"
+  if [ ! -f .env.development ]; then
+    echo "❌ No .env.development file found. Please create one."
+    exit 1
+  fi
+fi
+
+# Load environment variables
+export $(cat .env.development | xargs)
+
+# Install dependencies
+echo "Installing Ruby dependencies..."
+bundle install
+
+# Setup database
+echo "Setting up database..."
+bin/rails db:create db:migrate db:seed
+
+echo "Development environment setup complete!"
+echo "Run 'bin/rails server' to start the application."
