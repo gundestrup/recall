@@ -1,0 +1,18 @@
+#!/bin/bash
+# Pre-push hook — test gate before pushing.
+# Ports the overcommit PrePush RailsTest check (the only blocking gate
+# it had). Skip with: git push --no-verify
+
+echo "🔍 Running pre-push gate: bin/check-tests..."
+echo ""
+
+if ./bin/check-tests; then
+    echo ""
+    echo "✅ Pre-push checks passed"
+else
+    echo ""
+    echo "❌ Pre-push checks failed — fix or use 'git push --no-verify'"
+    exit 1
+fi
+
+exit 0

@@ -1,0 +1,29 @@
+#!/bin/bash
+# Pre-commit hook — fast local gate on staged files.
+# Replaces the former overcommit setup (all its checks were warn-only).
+# Skip with: git commit --no-verify
+
+set -e
+
+STAGED_RB=$(git diff --cached --name-only --diff-filter=ACM -- '*.rb' | tr '\n' ' ')
+
+if [ -n "$STAGED_RB" ]; then
+    echo "🔍 rubocop on staged files..."
+    # shellcheck disable=SC2086
+    bundle exec rubocop --force-exclusion $STAGED_RB || {
+        echo ""
+        echo "❌ RuboCop failed. Fix or run 'bundle exec rubocop -a'."
+        exit 1
+    }
+fi
+
+# Keep annotations in sync when schema/models/routes change
+# (ports the old overcommit Annotate hook)
+if git diff --cached --name-only | grep -qE '^(db/schema\.rb|db/migrate/|app/models/|config/routes\.rb)'; then
+    echo "📝 refreshing annotations..."
+    bundle exec annotaterb models --exclude tests,fixtures,factories \
+        && bundle exec annotaterb routes \
+        && git add -u app/models config/routes.rb db/annotate* 2>/dev/null || true
+fi
+
+exit 0
