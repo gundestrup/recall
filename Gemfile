@@ -25,8 +25,6 @@ gem "cancancan"
 gem "rack-attack"
 # Authentication audit trail
 gem "authtrail"
-# DRY flash messages and responders
-gem "responders"
 # Pagination
 gem "kaminari"
 # Background jobs

@@ -579,7 +579,6 @@ DEPENDENCIES
   rails-erd
   rails_best_practices
   reek
-  responders
   rubocop-performance
   rubocop-rails-omakase
   selenium-webdriver (~> 4.46)
