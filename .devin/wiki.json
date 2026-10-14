@@ -1,0 +1,59 @@
+{
+  "repo_notes": [
+    {
+      "content": "ReCALL is a Ruby on Rails 2.3.14 flashcard learning system for medical students. It is a legacy pre-Bundler Rails app: setup requires renaming config/database.example.yml, config/environment.example.rb, and vendor/plugin/sitealizer/lib/config.example.yml; listed gems include fastercsv, tiny_mce, will_paginate 2.3.16, rspec, and gherkin. Authentication is provided by the vendored acts_as_authenticated plugin."
+    },
+    {
+      "content": "Core model: Cards (flashcards) are grouped into Piles (decks) and organized via Categories and CategoriesTypes. The learning loop lives in piles_controller#learn with dedicated views (learn.html.erb, learn.mobile.erb). Piles can be exported as RSS/Atom feeds, PDF (lib/pdf_pile.rb via prawn, show.pdf.prawn), and print views, and there are parallel mobile (.mobile.erb) views throughout."
+    },
+    {
+      "content": "Supporting features: user accounts with activation/forgot-password mailers (user_notifier, error_mailer), an admin area (admin_controller), info pages with an RSS builder, full-text search (search_controller), a sitemap (sitemap_controller + sitemap.rxml), Danish and English locales (config/locales/da.yml, en.yml), and tiny_mce rich-text config. Tests use test/unit, test/functional, and YAML fixtures."
+    }
+  ],
+  "pages": [
+    {
+      "title": "Application Overview",
+      "purpose": "What ReCALL is (a Rails 2.3 flashcard system for medical students), the Cards/Piles/Categories model, install steps, and the legacy architecture (vendored plugins, script/*, config/environment.rb).",
+      "page_notes": [
+        {
+          "content": "Key sources: README (install and gem list), config/routes.rb, config/environment.example.rb, app/controllers/application_controller.rb, vendor/plugins/."
+        }
+      ]
+    },
+    {
+      "title": "Cards and Piles (Learning Flow)",
+      "purpose": "The heart of the app: card and pile models/controllers, creating piles, the learn action and its views, and import/export support in the piles UI.",
+      "parent": "Application Overview"
+    },
+    {
+      "title": "Categories and Category Types",
+      "purpose": "How flashcards are classified: categories and categories_type controllers/models, category search partials, and list/index views including RSS output.",
+      "parent": "Application Overview"
+    },
+    {
+      "title": "Accounts, Authentication, and Mailers",
+      "purpose": "Signup/login/password flows in accounts_controller, the acts_as_authenticated vendor plugin and lib/authenticated_system.rb, User/UserObserver models, and user_notifier + error_mailer mailers and templates.",
+      "parent": "Application Overview"
+    },
+    {
+      "title": "Output Formats: Feeds, PDF, Mobile, Print",
+      "purpose": "Alternate representations: pile RSS/Atom builders, PDF generation via lib/pdf_pile.rb (prawn show.pdf.prawn), .mobile.erb views and mobile layout, and print views (show.print.erb).",
+      "parent": "Application Overview"
+    },
+    {
+      "title": "Admin, Info, Search, and Sitemap",
+      "purpose": "Auxiliary controllers: admin area (user management and logs), info pages (about/help/getting started/statistics with RSS), search_controller, and sitemap generation (sitemap.rxml, lib/gen_url_list.rb).",
+      "parent": "Application Overview"
+    },
+    {
+      "title": "Infrastructure and Localization",
+      "purpose": "Rails 2.3 plumbing: config boot/environments/initializers, da and en locales, tiny_mce.yml, database.example.yml, the two migrations under db/migrate, vendored plugins, and public/ assets (iui mobile framework, sitealizer).",
+      "parent": "Application Overview"
+    },
+    {
+      "title": "Testing",
+      "purpose": "test/unit and test/functional suites, YAML fixtures, lib/authenticated_test_helper.rb, and the rspec/gherkin gems listed in the README.",
+      "parent": "Application Overview"
+    }
+  ]
+}
